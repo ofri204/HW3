@@ -104,4 +104,9 @@ public class Circle extends Shape {
 
     }
 
+    @Override
+    public Circle clone(){
+        return new Circle( this.radius );
+    }
+
 }

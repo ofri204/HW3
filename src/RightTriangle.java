@@ -141,4 +141,10 @@ public class RightTriangle extends Shape {
         return this.width == otherRightTriangle.width && this.height == otherRightTriangle.height;
     }
 
+    @Override
+    public RightTriangle clone(){
+        return new RightTriangle(this.width, this.height);
+    }
+
+
 }

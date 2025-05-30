@@ -35,4 +35,9 @@ public class Square extends Rectangle {
         Square otherSquare= (Square) otherObj;
         return this.getWidth() == otherSquare.getWidth();
     }
+
+    @Override
+    public Square clone(){
+        return new Square( this.side );
+    }
 }

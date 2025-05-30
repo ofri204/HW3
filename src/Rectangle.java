@@ -99,4 +99,9 @@ public class Rectangle extends Shape {
         Rectangle otherRectangle = (Rectangle) otherObj;
         return this.width == otherRectangle.width && this.height == otherRectangle.height;
     }
+
+    @Override
+    public Rectangle clone(){
+        return new Rectangle(this.width, this.height);
+    }
 }

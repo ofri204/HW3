@@ -2,7 +2,7 @@
  * An abstract class representing a shape.
  * All subclasses of Shape must implement the following defined methods.
  **/
-public abstract class Shape {
+public abstract class Shape implements Cloneable{
 
     /**
      * Returns the height of the shape.
@@ -50,4 +50,6 @@ public abstract class Shape {
      **/
     public abstract boolean equals(Object obj);
 
+    @Override
+    public abstract Shape clone();
 }
