@@ -9,7 +9,7 @@ public class Canvas {
     private static final int INDEX_NOT_EXIST_ERROR = -1;
     private static final int ROW_POS_IN_ARR = 0;
     private static final int COLUMN_POS_IN_ARR = 1;
-
+    private static final int NUM_COORDINATE_PARTS = 2;
 
     public Canvas(int width, int height) {
 
@@ -17,7 +17,7 @@ public class Canvas {
         this.height = height;
 
         this.shapes = new Shape[width][height];
-        shapesCoordinates = new int[width][height];
+        this.shapesCoordinates = new int[width*height][NUM_COORDINATE_PARTS];
 
         this.numShapes = 0;
     }
