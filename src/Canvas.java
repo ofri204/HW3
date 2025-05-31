@@ -17,7 +17,7 @@ public class Canvas {
         this.height = height;
 
         this.shapes = new Shape[width][height];
-        shapesCoordinates = new int[width][height];
+        shapesCoordinates = new int[height][width];
 
         this.numShapes = 0;
     }
@@ -138,6 +138,32 @@ public class Canvas {
         return this.shapes[row][column] != null;
     }
 
+    private Shape findShapeByCoordinate(int row, int column) {
+        return shapes[row][column];
+    }
+
+
+    public double getTotalArea() {
+        double totalArea= 0;
+        for( int[] coordinate : shapesCoordinates ){
+            int row= coordinate[ROW_POS_IN_ARR];
+            int col= coordinate[COLUMN_POS_IN_ARR];
+            Shape tempShape=findShapeByCoordinate(row,col);
+            totalArea += tempShape.calculateArea();
+        }
+        return totalArea;
+    }
+
+    public double getTotalPerimeter() {
+        double totalPerimeter= 0;
+        for( int[] coordinate : shapesCoordinates ){
+            int row= coordinate[ROW_POS_IN_ARR];
+            int col= coordinate[COLUMN_POS_IN_ARR];
+            Shape tempShape=findShapeByCoordinate(row,col);
+            totalPerimeter += tempShape.calculatePerimeter();
+        }
+        return totalPerimeter;
+    }
 
 
 
