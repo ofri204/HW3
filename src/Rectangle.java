@@ -3,18 +3,19 @@
  * Inherits from the abstract Shape class and implementations it's methods.
  **/
 public class Rectangle extends Shape {
-    private int width;
-    private int height;
 
-    /**
-     * Constructs a rectangle with width and height.
-     *
-     * @param width the width of the rectangle.
-     * @param height the height of the rectangle.
-     **/
-    public Rectangle(int width, int height) {
+    /**Properties of Rectangle*/
+    private final int width;
+    private final int height;
+
+
+    /**Basic Constructor of Rectangle*/
+    public Rectangle( int width, int height){
         this.width = width;
         this.height = height;
+
+        this.setShapeDataObject( this.getWidth(), this.getHeight(), this.toString());
+
     }
 
     /**
@@ -43,7 +44,7 @@ public class Rectangle extends Shape {
      * @return the area of the rectangle.
      **/
     @Override
-    public double calculateArea() {
+    public double area() {
         return this.width * this.height;
     }
 
@@ -52,7 +53,7 @@ public class Rectangle extends Shape {
      *
      * @return the perimeter of the rectangle.
      **/
-    public double calculatePerimeter() {
+    public double perimeter() {
         return 2 * this.width + 2 * this.height;
     }
 
@@ -65,18 +66,11 @@ public class Rectangle extends Shape {
      * @return a string representation of the rectangle.
      **/
     @Override
-    public String show() {
-        String cell = " *";
-        String line = cell.repeat(this.width);
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < height; i++) {
-            result.append(line);
-            result.append(" ");
-            result.append("\n");
-        }
-
-        return result.toString();
+    public String toString() {
+        String blockInRow = Shape.shapeCell + Shape.spaceBetweenCells;
+        String line = Shape.spaceInBound + blockInRow.repeat(this.width - 1) + Shape.shapeCell
+                + Shape.spaceInBound + Shape.endLine;
+        return line.repeat( this.height );
     }
 
     /**
@@ -100,6 +94,7 @@ public class Rectangle extends Shape {
         return this.width == otherRectangle.width && this.height == otherRectangle.height;
     }
 
+    /**Clone function*/
     @Override
     public Rectangle clone(){
         return new Rectangle(this.width, this.height);

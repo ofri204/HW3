@@ -2,9 +2,10 @@
  * Represents a right triangle shape with width and height.
  * Inherits from the abstract Shape class and implements it's methods.
  **/
-public class RightTriangle extends Shape {
-    private int width;
-    private int height;
+public class RightAngleTriangle extends Shape {
+    /**Properties of RightAngelTriangle*/
+    private final int width;
+    private final int height;
 
     /**
      * Constructs a right triangle with the width and height.
@@ -12,9 +13,11 @@ public class RightTriangle extends Shape {
      * @param width the base of the triangle.
      * @param height the height of the triangle.
      **/
-    public RightTriangle(int width, int height) {
+    public RightAngleTriangle(int width, int height) {
         this.width = width;
         this.height = height;
+        this.setShapeDataObject( this.getWidth(), this.getHeight(), this.toString());
+
     }
 
     /**
@@ -43,7 +46,7 @@ public class RightTriangle extends Shape {
      * @return the area of the triangle
      **/
     @Override
-    public double calculateArea() {
+    public double area() {
         return (double) (this.width * this.height) / 2;
     }
 
@@ -54,7 +57,7 @@ public class RightTriangle extends Shape {
      * @return the perimeter of the triangle
      **/
     @Override
-    public double calculatePerimeter() {
+    public double perimeter() {
         double hypotenuse = Math.sqrt(this.width * this.width + this.height * this.height);
         return this.width + this.height + hypotenuse;
     }
@@ -67,19 +70,13 @@ public class RightTriangle extends Shape {
      * @return a string representation of the triangle
      **/
     @Override
-    public String show() {
+    public String toString() {
         StringBuilder result = new StringBuilder();
-
         for (int i = 1; i <= height; i++) {
-            int starsCount = calculateAsterisksCount(i);
-            String line = createLine(starsCount);
+            int startNumber = calNumberStartsInRow(i);
+            String line = createLine(startNumber);
             result.append(line);
-
-            if (i < height) {
-                result.append("\n");
-            }
         }
-
         return result.toString();
     }
 
@@ -91,13 +88,13 @@ public class RightTriangle extends Shape {
      * @param row the current row number (starting from 1)
      * @return the number of asterisks for this row (at least 1)
      **/
-    private int calculateAsterisksCount(int row) {
-        int count = (int)((double) row * width / height);
-        if (count == 0) {
-            return 1;
+    private int calNumberStartsInRow(int row) {
+        if( this.height == 0  || this.width == 0){ return 0; }
+        int numberStars = (int)((double) row * width / height);
+        if( numberStars == 0 ){
+            numberStars = 1;
         }
-
-        return count;
+        return numberStars;
     }
 
     /**
@@ -105,20 +102,12 @@ public class RightTriangle extends Shape {
      * Constructs a string for a row with the specified number of asterisks.
      * Each line starts and ends with a space, and asterisks are separated by single spaces.
      *
-     * @param asterisksCount the number of stars in the row.
      * @return the formatted string line.
      **/
-    private String createLine(int asterisksCount) {
-        String line = " ";
-
-        if (asterisksCount == 1) {
-            line += "*";
-        } else {
-            line += "* ".repeat(asterisksCount - 1) + "*";
-        }
-
-        line += " ";
-        return line;
+    private String createLine(int starsNum) {
+        String blockInLine = Shape.shapeCell + Shape.spaceBetweenCells;
+        return Shape.spaceInBound + blockInLine.repeat(starsNum ) + Shape.spaceBetweenCells +
+                Shape.endLine;
     }
 
     /**
@@ -137,13 +126,14 @@ public class RightTriangle extends Shape {
         if (this.getClass() != otherObj.getClass())
             return false;
 
-        RightTriangle otherRightTriangle = (RightTriangle) otherObj;
+        RightAngleTriangle otherRightTriangle = (RightAngleTriangle) otherObj;
         return this.width == otherRightTriangle.width && this.height == otherRightTriangle.height;
     }
 
+    /**Clone function*/
     @Override
-    public RightTriangle clone(){
-        return new RightTriangle(this.width, this.height);
+    public RightAngleTriangle clone(){
+        return new RightAngleTriangle(this.width, this.height);
     }
 
 
