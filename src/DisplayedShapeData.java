@@ -15,8 +15,8 @@ public class DisplayedShapeData {
 
     /**Basic Constructor of DisplayedShapeData*/
     public DisplayedShapeData( int width, int height, String shapeStr ){
-        this.rowAmount = width * (DisplayedShapeData.SPACE_BETWEEN_SHAPE_CELLS+1);
-        this.columnAmount = height;
+        this.rowAmount = height;
+        this.columnAmount = width * (DisplayedShapeData.SPACE_BETWEEN_SHAPE_CELLS+1);
         this.shapeStr = shapeStr;
         this.shapeStrLength = this.shapeStr.length();
         this.rowsEndsIndexes = new int[this.rowAmount];
@@ -70,5 +70,21 @@ public class DisplayedShapeData {
         return str.toString();
     }
 
+    public int calculateRowLen( int numRow ){
+        if( numRow > this.rowAmount || numRow < 0){ //row doesn't exist
+            return 0;
+        }
+
+        int startIndex, endIndex;
+        if( numRow == 0 ){ //first start is at index 0
+            startIndex = 0;
+            endIndex = this.rowsEndsIndexes[0];
+        } else{
+            startIndex = this.rowsEndsIndexes[numRow - 1] + 1;
+            endIndex = this.rowsEndsIndexes[numRow];
+        }
+
+        return endIndex - startIndex;
+    }
 
 }

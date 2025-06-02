@@ -35,6 +35,10 @@ public abstract class Shape implements Cloneable{
         return shapeData.cutRowNumber( rowNumber);
     }
 
+    protected final int calculateRowLength( int rowNumber ){
+        return this.shapeData.calculateRowLen( rowNumber );
+    }
+
     /**
      * Returns the height of the shape.
      *

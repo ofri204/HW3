@@ -130,6 +130,17 @@ public class RightAngleTriangle extends Shape {
         return this.width == otherRightTriangle.width && this.height == otherRightTriangle.height;
     }
 
+    public int findLongestRowLength(){
+        int maxLength = 0;
+        for( int i = 0; i < this.height-1; i++){
+            int lenRow = this.calculateRowLength(i);
+            if( lenRow > maxLength){
+                maxLength = lenRow;
+            }
+        }
+        return maxLength;
+    }
+
     /**Clone function*/
     @Override
     public RightAngleTriangle clone(){
