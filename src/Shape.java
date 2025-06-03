@@ -4,6 +4,42 @@
  **/
 public abstract class Shape implements Cloneable{
 
+    /**Cell properties*/
+    protected static final String shapeCell = "*";
+    protected static final String spaceCell = " ";
+    protected static final String endLine = "\n";
+    private static final int sizeSpaceBetweenCells = 2;
+    private static final int sizeSpaceInBounds = 1;
+    protected static final String spaceBetweenCells = Shape.spaceCell.repeat( Shape.sizeSpaceBetweenCells);
+    protected static final String spaceInBound = Shape.spaceCell.repeat( Shape.sizeSpaceInBounds );
+
+    /**Properties for analyzing shape string*/
+    private DisplayedShapeData shapeData;
+
+    /**Create {@code shapeData}
+     * <br> Note: this function can set data shape once (since shape is immutable object)
+     * @param width width of the shape
+     * @param height height of the shape
+     * @param shapeStr shape's String
+     * */
+    protected final void setShapeDataObject( int width, int height, String shapeStr ){
+        if( this.shapeData == null ){
+            this.shapeData = new DisplayedShapeData( this.getClass().getName(),
+                    width,  height,  shapeStr);
+        }
+    }
+
+    /**Get a row of shapes string
+     * @param rowNumber
+     * @return string of the row */
+    protected final String cutRowFromString( int rowNumber ){
+        return shapeData.cutRowNumber( rowNumber);
+    }
+
+    protected final int calculateRowLength( int rowNumber ){
+        return this.shapeData.calculateRowLen( rowNumber );
+    }
+
     /**
      * Returns the height of the shape.
      *
@@ -23,14 +59,14 @@ public abstract class Shape implements Cloneable{
      *
      * @return the area.
      **/
-    public abstract double calculateArea();
+    public abstract double area();
 
     /**
      * Calculates the perimeter of the shape.
      *
      * @return the perimeter.
      **/
-    public abstract double calculatePerimeter();
+    public abstract double perimeter();
 
     /**
      * Returns a string representation of the shape.
@@ -38,7 +74,7 @@ public abstract class Shape implements Cloneable{
      *
      * @return a string that visually represents the shape.
      **/
-    public abstract String show();
+    public abstract String toString();
 
     /**
      * Checks whether this shape is equal to another object.
@@ -50,6 +86,8 @@ public abstract class Shape implements Cloneable{
      **/
     public abstract boolean equals(Object obj);
 
+
+    /**Clone function*/
     @Override
     public abstract Shape clone();
 }
