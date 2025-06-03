@@ -3,7 +3,10 @@
  * where the width and height (side lengths) are equal.
  **/
 public class Square extends Rectangle {
-    private int side;
+
+    /**Properties of Square*/
+    private final int side;
+
 
     /**
      * Constructs a square with the given side length.
@@ -11,10 +14,9 @@ public class Square extends Rectangle {
      * @param side the side length of the square.
      */
     public Square(int side) {
-        super( side , side);
+        super( side , side );
         this.side=side;
     }
-
 
     /**
      * Compares this square to another object for equality.
@@ -36,6 +38,7 @@ public class Square extends Rectangle {
         return this.getWidth() == otherSquare.getWidth();
     }
 
+    /**Clone function*/
     @Override
     public Square clone(){
         return new Square( this.side );
