@@ -3,7 +3,7 @@ public class DisplayedShapeData {
 
     /**Properties of DisplayedShapeData*/
     private  int rowAmount;
-    private final int columnAmount;
+    private  int columnAmount;
     private final int shapeStrLength;
     private final String shapeStr;
     private final int[] rowsEndsIndexes;
@@ -19,7 +19,7 @@ public class DisplayedShapeData {
     public DisplayedShapeData( String shapeClassName, int width, int height, String shapeStr ){
         this.shapeClassName = shapeClassName;
         this.rowAmount = height;
-        this.columnAmount = width * (DisplayedShapeData.SPACE_BETWEEN_SHAPE_CELLS+1);
+        this.columnAmount = width * 3;
         this.shapeStr = shapeStr;
         this.shapeStrLength = this.shapeStr.length();
 
@@ -27,15 +27,18 @@ public class DisplayedShapeData {
             this.rowAmount++;
         }
 
+
         this.rowsEndsIndexes = new int[this.rowAmount];
-        this.maxEmptyRow = " ".repeat( this.columnAmount );
 
         this.setAllRowsEndings();//find all indexes where row is ending (with '\n')
+
         this.rowsEndsIndexes[ this.rowAmount - 1] = this.shapeStrLength - 1;
+
+        this.maxEmptyRow = " ".repeat( this.columnAmount );
+
+
+
     }
-
-
-
 
 
     public String getMaxEmptyRow(){

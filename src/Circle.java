@@ -15,7 +15,7 @@ public class Circle extends Shape {
     public Circle(int radius) {
 
         this.radius = radius;
-        this.setShapeDataObject( this.getWidth(), this.getHeight(), this.toString());
+        this.setShapeDataObject( 3*this.getWidth(), this.getHeight(), this.toString());
     }
 
     /**

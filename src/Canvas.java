@@ -9,8 +9,6 @@ public class Canvas {
     private int numShapes;
 
 
-
-
     /**Errors*/
     private static final int INDEX_NOT_EXIST_ERROR = -1;
     private static final int NO_SHAPES_IN_ROW = -2;
@@ -100,12 +98,14 @@ public class Canvas {
     private String createCanvasBoard(){
         StringBuilder board = new StringBuilder();
         for( int row = 0; row < this.rowAmount; row++ ){ // creating each row of the canvas board
-            String boardRow = createCanvasBoardRow( row );
-            board.append( boardRow );
-            board.append( Canvas.EMPTY_ROW );
             if( this.isEmptyBoardRow( row) ){
                 board.append( Canvas.EMPTY_ROW);
+            } else{
+                String boardRow = createCanvasBoardRow( row );
+                board.append( boardRow );
             }
+            board.append( Canvas.EMPTY_ROW );
+
         }
         return board.toString();
     }
@@ -134,7 +134,7 @@ public class Canvas {
 
         Shape shapeWithMaxWidth = this.findShapeWithMaxRowLen( numRow );
         int maxRowWidth = this.calculateMaxWidthInRow( shapeWithMaxWidth );
-        String emptyRowLine = Shape.spaceCell.repeat( shapeWithMaxWidth.getWidth()*3 );
+        String emptyRowLine = " ".repeat( shapeWithMaxWidth.getWidth()*3 + 3 ); //Shape.spaceCell
 
         int maxHeight = this.findMaxHeightInRow( numRow );
         for( int i = 0; i < maxHeight; i++){
@@ -146,6 +146,9 @@ public class Canvas {
 
 
     private int calculateMaxWidthInRow( Shape shape ){
+        if( shape == null ){
+            return 0;
+        }
         int numRow = 0;
         if( shape.getClass() == RightAngleTriangle.class ){
             numRow = shape.getHeight()-1;
@@ -159,15 +162,10 @@ public class Canvas {
                                                 String emptyRowLine, int maxRowWidth){
         StringBuilder row = new StringBuilder();
 
-
-
         for( int i = 0; i < this.columnAmount; i++){
 
             Shape[] rowShapes = this.shapes[numOfCanvasRow];
 
-            if( i != 0 ){
-                row.append( Canvas.SPACE_BETWEEN_SHAPES );
-            }
 
             if( rowShapes[i] == null  ){
                     row.append( emptyRowLine );
@@ -178,28 +176,34 @@ public class Canvas {
                     currentHeight++;
                 }
 
-                Shape temp = rowShapes[i];
-
                 if(  numRowOfShapeRow < currentHeight ){
                     String fixedShapeRow =
                             this.fixDisplayedShapeRow(this.shapes[numOfCanvasRow][i], numRowOfShapeRow );
                     row.append( fixedShapeRow );
                 } else{
-                    row.append(  rowShapes[i].getMaxEmptyRow() );
+                    row.append(  rowShapes[i].getMaxEmptyRow());
                 }
             }
-
 
             if( i != this.columnAmount - 1){
                 row.append( Canvas.SPACE_BETWEEN_SHAPES );
             }
         }
 
+
         return row.toString();
     }
 
     private String fixDisplayedShapeRow( Shape shape, int rowNumber){
-        return shape.cutRowFromString(rowNumber);
+        String rowStr = shape.cutRowFromString(rowNumber);
+        int ln = ( rowStr.length() );
+        if( shape.getClass() == RightAngleTriangle.class ){
+            int l = ((RightAngleTriangle) shape).getLongestRow();
+            int difference = ((RightAngleTriangle) shape).getLongestRow() - rowStr.length();
+            rowStr += " ".repeat( difference );
+        }
+
+        return rowStr;
     }
 
     private Shape findShapeWithMaxRowLen( int row ){

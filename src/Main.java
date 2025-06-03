@@ -1,26 +1,15 @@
 public class Main {
 
     public static void main(String[] args) {
-
-        Canvas canvas = new Canvas(3,4);
-        test9();
-        //canvas.addShape(new Rectangle(2, 3), 1, 0);
-        canvas.addShape(new Circle(2), 0, 1);
-        //canvas.addShape(new RightAngleTriangle(4, 3), 0, 2);
-
-       // System.out.println(canvas);
-
-        //test2();
-       // test3();
-        //test1();
-        /*test2();
-        test3();
-        test4();
-        test5();
-        test6();
-        test7();
-        test8();
-        test9();*/
+       // test1();
+        test2();
+        //test3();
+        //test4();
+        //test5();
+        //test6();
+        //test7();
+        //test8();
+        //test9();
     }
 
     public static void test1() {
@@ -153,6 +142,7 @@ public class Main {
     }
 
     public static void test9() {
+
         System.out.println("--- Test 9 - Canvas (3x4) ---");
 
         Canvas canvas = new Canvas(3, 4);
