@@ -320,11 +320,71 @@ public class Canvas {
         return this.shapes[numRow][numColumn] == null;
     }
 
+    /**
+     * Helper function for {@link #equals(Object)}.
+     * Checks if the given object is not null and if it is of the same class as this object.
+     *
+     * @param otherObj the object to compare with.
+     * @return true if the object is not null and belongs to the same class, false otherwise.
+     **/
+    private boolean isOtherNotNullAndSameClass(Object otherObj) {
+        return otherObj != null && this.getClass() == otherObj.getClass();
+    }
 
+    /**
+     * Helper function for {@link #equals(Object)}.
+     * Checks if this canvas has the same dimensions as the another canvas.
+     *
+     * @param other the canvas to compare with.
+     * @return true if both canvases have the same number of rows and columns, false otherwise.
+     **/
+    private boolean isTheSameDimensions(Canvas other) {
+        return this.rowAmount == other.rowAmount && this.columnAmount == other.columnAmount;
+    }
 
+    /**
+     * Helper function for {@link #equals(Object)}.
+     * Checks if all shapes in this canvas are equal to the corresponding shapes in the other canvas.
+     *
+     * @param other the canvas to compare with.
+     * @return true if all corresponding shapes are equal or both null, false otherwise
+     **/
+    private boolean areAllShapesTheSame(Canvas other) {
+        for (int i = 0; i < rowAmount; i++) {
+            for (int j = 0; j < columnAmount; j++) {
+                Shape thisShape = this.shapes[i][j];
+                Shape otherShape = other.shapes[i][j];
 
+                if (thisShape == null && otherShape != null) return false;
+                if (thisShape != null && !thisShape.equals(otherShape)) return false;
+            }
+        }
+        return true;
+    }
 
+    /**
+     * Checks whether this canvas is equal to another canvas.
+     * The equality is based on having the same dimensions and all corresponding shapes being equal.
+     *
+     * @param otherObj the object to compare with.
+     * @return true if the objects are equal, false otherwise.
+     **/
+    @Override
+    public boolean equals(Object otherObj) {
+        if (this == otherObj) return true;
 
+        if (! isOtherNotNullAndSameClass(otherObj)) return false;
 
+        Canvas other = (Canvas) otherObj;
+
+        return isTheSameDimensions(other) && areAllShapesTheSame(other);
+
+    }
 
 }
+
+
+
+
+
+
