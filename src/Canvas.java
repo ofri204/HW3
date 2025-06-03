@@ -1,23 +1,34 @@
+
 public class Canvas {
-    private int width;
-    private int height;
-    private Shape[][] shapes;
-    private int[][] shapesCoordinates;
+
+    /**Properties of Canvas Object*/
+    private final int columnAmount;
+    private final int rowAmount;
+    private final Shape[][] shapes;
+    private final int[][] shapesCoordinates;
     private int numShapes;
 
 
+    /**Errors*/
     private static final int INDEX_NOT_EXIST_ERROR = -1;
-    private static final int ROW_POS_IN_ARR = 0;
-    private static final int COLUMN_POS_IN_ARR = 1;
+    private static final int NO_SHAPES_IN_ROW = -2;
+    /**Coordinates properties*/
+    private static final int ROW_POS_IN_COORDS = 0;
+    private static final int COLUMN_POS_IN_COORDS = 1;
     private static final int NUM_COORDINATE_PARTS = 2;
 
-    public Canvas(int width, int height) {
 
-        this.width = width;
-        this.height = height;
+    private static final String SPACE_BETWEEN_SHAPES = "   ";
+    private static final String EMPTY_ROW = "\n";
 
-        this.shapes = new Shape[width][height];
-        shapesCoordinates = new int[width][height];
+    /**Basic Canvas constructor*/
+    public Canvas(int rowAmount, int columnAmount) {
+
+        this.rowAmount = rowAmount;
+        this.columnAmount = columnAmount;
+
+        this.shapes = new Shape[rowAmount][columnAmount];
+        this.shapesCoordinates = new int[rowAmount*columnAmount][NUM_COORDINATE_PARTS];
 
         this.numShapes = 0;
     }
@@ -28,60 +39,232 @@ public class Canvas {
      * <br><b>Note1: if the {@code newShape} is null, it won't be added.</b>
      * <br><b>Note2: if one the coordinates is out of bound, the shape won't be added.</b>
      * @param newShape a new shape
-     * @param row the row of the shape in canvas
-     * @param column the column of the shape in canvas*/
-    public void addShape(Shape newShape, int row, int column){
+     * @param numRow the row of the shape in canvas
+     * @param numColumn the column of the shape in canvas*/
+    public void addShape(Shape newShape, int numRow, int numColumn){
 
-        if( this.hasOutOfBound(row, column) || newShape == null ) { return; }
+        if( this.hasOutOfBound(numRow, numColumn) || newShape == null ) { return; }
 
-        this.shapes[row][column] = newShape.clone();
-        this.addCoordinate(row, column);
-
+        this.shapes[numRow][numColumn] = newShape.clone();
+        this.addCoordinate(numRow, numColumn);
     }
 
     /**
      * <p><u>Removes a shape from canvas</u></p>
      * <br><b>Note1: if the coordinate is out of bound, no shape will be removed</b>
      * <br><b>Note2: if the shape in the coordinate is null, no shape will be removed</b>
-     * @param row row of a shape to remove
-     * @param column column of a shape to remove
+     * @param numRow row of a shape to remove
+     * @param numColumn column of a shape to remove
      * */
-    public void removeShape( int row, int column ){
-        if( this.hasOutOfBound(row, column) || !this.hasShapeInIndex(row, column) ) { return; }
-        this.shapes[row][column] = null;
-        this.removeCoordinate(row, column);
-
+    public void removeShape( int numRow, int numColumn ){
+        if( this.hasOutOfBound(numRow, numColumn) || this.isCoordinateEmpty(numRow, numColumn) ) {
+            return;
+        }
+        this.shapes[numRow][numColumn] = null;
+        this.removeCoordinate(numRow, numColumn);
     }
+
+    public double getTotalArea() {
+        double totalArea= 0;
+        for( int i = 0; i < this.numShapes; i++){
+            int numRow = this.shapesCoordinates[i][Canvas.ROW_POS_IN_COORDS];
+            int numColumn = this.shapesCoordinates[i][Canvas.COLUMN_POS_IN_COORDS];
+            Shape tempShape = this.shapes[numRow][numColumn];
+            totalArea += tempShape.area();
+        }
+        return totalArea;
+    }
+
+    public double getTotalPerimeter() {
+        double totalPerimeter= 0;
+        for( int i = 0; i < this.numShapes; i++){
+            int numRow = this.shapesCoordinates[i][Canvas.ROW_POS_IN_COORDS];
+            int numColumn = this.shapesCoordinates[i][Canvas.COLUMN_POS_IN_COORDS];
+            Shape tempShape = this.shapes[numRow][numColumn];
+            totalPerimeter += tempShape.perimeter();
+        }
+        return totalPerimeter;
+    }
+
+
+    @Override
+    public String toString(){
+        return this.createCanvasBoard();
+    }
+
+    /**
+     * <p><u>Creates canvas board string</u></p>
+     * @return canvas board string*/
+    private String createCanvasBoard(){
+        StringBuilder board = new StringBuilder();
+        for( int row = 0; row < this.rowAmount; row++ ){ // creating each row of the canvas board
+            String boardRow = createCanvasBoardRow( row );
+            board.append( boardRow );
+            board.append( Canvas.EMPTY_ROW );
+            if( this.isEmptyBoardRow( row) ){
+                board.append( Canvas.EMPTY_ROW);
+            }
+        }
+        return board.toString();
+    }
+
+    private boolean isEmptyBoardRow( int rowNum ){
+        for( int i = 0; i < this.columnAmount; i++){
+            if( this.shapes[rowNum][i] != null){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int findLastShapeInRowIndex(int numRow){
+        int lastShapePos = Canvas.NO_SHAPES_IN_ROW;
+        for( int i = 0; i < this.columnAmount; i++){
+            if( this.shapes[numRow][i] != null){
+                lastShapePos = i;
+            }
+        }
+        return lastShapePos;
+    }
+
+    private String createCanvasBoardRow( int numRow ){
+        StringBuilder canvasBoardRow = new StringBuilder();
+
+        Shape shapeWithMaxWidth = this.findShapeWithMaxRowLen( numRow );
+        int maxRowWidth = this.calculateMaxWidthInRow( shapeWithMaxWidth );
+        String emptyRowLine = Shape.spaceCell.repeat( shapeWithMaxWidth.getWidth()*3 );
+
+        int maxHeight = this.findMaxHeightInRow( numRow );
+        for( int i = 0; i < maxHeight; i++){
+            String row = this.createDisplayRowOfCanvasRow( i, numRow, emptyRowLine, maxRowWidth );
+            canvasBoardRow.append(row).append(Canvas.EMPTY_ROW);
+        }
+        return canvasBoardRow.toString();
+    }
+
+
+    private int calculateMaxWidthInRow( Shape shape ){
+        int numRow = 0;
+        if( shape.getClass() == RightAngleTriangle.class ){
+            numRow = shape.getHeight()-1;
+        } else if( shape.getClass() == Circle.class ){
+            numRow = shape.getHeight()/2 - 1;
+        }
+        return shape.calculateRowLength( numRow );
+    }
+
+    private String createDisplayRowOfCanvasRow( int numRowOfShapeRow, int numOfCanvasRow,
+                                                String emptyRowLine, int maxRowWidth){
+        StringBuilder row = new StringBuilder();
+
+        for( int i = 0; i < this.columnAmount; i++){
+
+            if( this.shapes[numOfCanvasRow][i] == null  ){
+                    row.append( emptyRowLine );
+            } else{
+
+                if( i != 0  && this.shapes[numOfCanvasRow][i-1] != null){
+                    row.append( Canvas.SPACE_BETWEEN_SHAPES );
+                }
+
+                if(  numRowOfShapeRow < this.shapes[numOfCanvasRow][i].getHeight() ){
+                    String fixedShapeRow =
+                            this.fixDisplayedShapeRow(this.shapes[numOfCanvasRow][i],
+                                    maxRowWidth, numRowOfShapeRow );
+                    row.append( fixedShapeRow );
+                } else{
+                    row.append( emptyRowLine );
+                }
+
+                if( i != this.columnAmount - 1 && this.shapes[numOfCanvasRow][i+1] != null ){
+                    row.append( Canvas.SPACE_BETWEEN_SHAPES );
+                }
+            }
+        }
+
+        return row.toString();
+    }
+
+    private String fixDisplayedShapeRow( Shape shape, int maxWidth, int rowNumber){
+        StringBuilder shapeRow = new StringBuilder(shape.cutRowFromString(rowNumber));
+        //int difference = maxWidth - shapeRow.toString().length();
+        //shapeRow.append( Shape.spaceCell.repeat( difference  ));
+        return shapeRow.toString();
+    }
+
+    private Shape findShapeWithMaxRowLen( int row ){
+        int maxWidth = 0, shapeIndex = 0;
+        for( int i = 0; i < this.numShapes; i++){
+            int[] temp = this.shapesCoordinates[i];
+            if( temp[ Canvas.ROW_POS_IN_COORDS] == row) {
+                Shape tempShape = this.shapes[temp[Canvas.ROW_POS_IN_COORDS]][temp[Canvas.COLUMN_POS_IN_COORDS]];
+                int tempShapeWidth =
+                        tempShape.getWidth();
+                if(tempShape.getClass() == Circle.class) { tempShapeWidth++;}
+
+                if( tempShapeWidth > maxWidth ) {
+                    maxWidth = tempShapeWidth;
+                    shapeIndex = i;
+                }
+            }
+
+        }
+        int[] maxShapeCoordinate = this.shapesCoordinates[shapeIndex];
+        return  this.shapes[maxShapeCoordinate[Canvas.ROW_POS_IN_COORDS]]
+                [maxShapeCoordinate[Canvas.COLUMN_POS_IN_COORDS]];
+    }
+
+    private int findMaxHeightInRow( int row ){
+        int maxHeight = 0;
+        for( int i = 0; i < this.numShapes; i++) {
+            int[] temp = this.shapesCoordinates[i];
+            if (temp[Canvas.ROW_POS_IN_COORDS] == row) {
+                Shape tempShape = this.shapes[temp[Canvas.ROW_POS_IN_COORDS]][temp[Canvas.COLUMN_POS_IN_COORDS]];
+                int tempShapeHeight =
+                        tempShape.getHeight();
+                if( tempShape.getClass() == Circle.class){ tempShapeHeight++;  }
+                if (tempShapeHeight > maxHeight) {
+                    maxHeight = tempShapeHeight;
+                }
+
+            }
+        }
+        return maxHeight;
+    }
+
+
+
 
     /**
      * <p><u>Checks if a coordinate is out of bound</u>
      * <br><b>Sub-function of: {@link #addShape(Shape, int, int)}, 
      * {@link #removeShape(int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate
+     * @param numRow a row of a coordinate
+     * @param numColumn a column of a coordinate
      * @return true if the coordinate is inside the bounds, false otherwise</p>*/
-    private boolean hasOutOfBound( int row, int column){
-        return row < 0 || column < 0 || this.width <= row || this.height <= column;
+    private boolean hasOutOfBound( int numRow, int numColumn){
+        return numRow < 0 || numColumn < 0 || this.columnAmount <= numColumn ||
+                this.rowAmount <= numRow;
     }
 
     /**<p><u>Checks if a coordinate exists in the canvas</u></p>
      * <br><b>Sub-function of: {@link #addCoordinate(int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate
+     * @param numRow a row of a coordinate
+     * @param numColumn a column of a coordinate
      * @return true if the coordinate exists, false otherwise</p>*/
-    private boolean isCoordinateExist(int row, int column){
-        return findIndexByCoordinates(row, column) != Canvas.INDEX_NOT_EXIST_ERROR;
+    private boolean isCoordinateExist(int numRow, int numColumn){
+        return this.findIndexByCoordinates(numRow, numColumn) != Canvas.INDEX_NOT_EXIST_ERROR;
     }
 
 
     /**<p><u>Adds a coordinate of an active shape to canvas</u></p>
      * <br><b>Note: if the coordinate exists, it won't be added</b>
      * <br><b>Sub-function of: {@link #addShape(Shape, int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate*/
-    private void addCoordinate( int row, int column ){
-        if( !isCoordinateExist(row, column) ){
-            this.shapesCoordinates[this.numShapes] = new int[]{ row, column };
+     * @param numRow a row of a coordinate
+     * @param numColumn a column of a coordinate*/
+    private void addCoordinate( int numRow, int numColumn ){
+        if( !this.isCoordinateExist(numRow, numColumn) ){
+            this.shapesCoordinates[this.numShapes] = new int[]{ numRow, numColumn };
             this.numShapes++;
         }
     }
@@ -89,25 +272,25 @@ public class Canvas {
 
     /**<p><u><Checks if input coordinate is identical to coordinate from canvas/u></p>
      * <br><b>Sub-function of: {@link #findIndexByCoordinates(int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate
+     * @param numRow a row of a coordinate
+     * @param numColumn a column of a coordinate
      * @param index an index of a coordinate from {@code shapesCoordinates}
      * @return true if they are identical, false otherwise*/
-    private boolean isCoordinatesSame( int row, int column, int index){
-        return this.shapesCoordinates[index][Canvas.ROW_POS_IN_ARR] == row
-                && this.shapesCoordinates[index][Canvas.COLUMN_POS_IN_ARR] == column;
+    private boolean isCoordinatesSame( int numRow, int numColumn, int index){
+        return this.shapesCoordinates[index][Canvas.ROW_POS_IN_COORDS] == numRow
+                && this.shapesCoordinates[index][Canvas.COLUMN_POS_IN_COORDS] == numColumn;
     }
 
     /**<p><u>Finds an index of a coordinate in canvas</u></p>
      * <br><b>Sub-function of: {@link #isCoordinateExist(int, int)}
      * {@link #removeCoordinate(int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate
+     * @param numRow a row of a coordinate
+     * @param numColumn a column of a coordinate
      * @return index of a coordinate in {@code shapesCoordinates} if it exists,
      * {@code INDEX_NOT_EXIST_ERROR} otherwise*/
-    private int findIndexByCoordinates( int row, int column ){
+    private int findIndexByCoordinates( int numRow, int numColumn ){
         for( int i = 0; i < this.numShapes; i++ ){
-            if ( this.isCoordinatesSame( row, column, i ) ){
+            if ( this.isCoordinatesSame( numRow, numColumn, i ) ){
                 return i;
             }
         }
@@ -117,53 +300,26 @@ public class Canvas {
 
     /**<p><u>Removes coordinate from canvas</u></p>
      * <br><b>Sub-function of: {@link #removeShape(int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate */
-    private void removeCoordinate( int row, int column ){
-        int posInArr = this.findIndexByCoordinates( row, column );
+     * @param numRow a row of a coordinate
+     * @param numColumn a column of a coordinate */
+    private void removeCoordinate( int numRow, int numColumn ){
+        int posInArr = this.findIndexByCoordinates( numRow, numColumn );
         this.shapesCoordinates[posInArr] = null;
         this.shapesCoordinates[posInArr] = this.shapesCoordinates[this.numShapes-1];
         this.shapesCoordinates[this.numShapes-1] = null;
         this.numShapes--;
-
     }
 
 
     /**<p><u>Checks if a shape in canvas if null</u></p>
      * <br><b>Sub-func of: {@link #removeShape(int, int)}</b>
-     * @param row a row of a coordinate
-     * @param column a column of a coordinate
-     * @return true if the shape isn't null, false otherwise*/
-    private boolean hasShapeInIndex( int row, int column){
-        return this.shapes[row][column] != null;
+     * @param numRow  a row of a coordinate
+     * @param numColumn a column of a coordinate
+     * @return true if the shape is null, false otherwise*/
+    private boolean isCoordinateEmpty( int numRow, int numColumn){
+        return this.shapes[numRow][numColumn] == null;
     }
 
-    private Shape findShapeByCoordinate(int row, int column) {
-        return shapes[row][column];
-    }
-
-
-    public double getTotalArea() {
-        double totalArea= 0;
-        for( int[] coordinate : shapesCoordinates ){
-            int row= coordinate[ROW_POS_IN_ARR];
-            int col= coordinate[COLUMN_POS_IN_ARR];
-            Shape tempShape=findShapeByCoordinate(row,col);
-            totalArea += tempShape.calculateArea();
-        }
-        return totalArea;
-    }
-
-    public double getTotalPerimeter() {
-        double totalPerimeter= 0;
-        for( int[] coordinate : shapesCoordinates ){
-            int row= coordinate[ROW_POS_IN_ARR];
-            int col= coordinate[COLUMN_POS_IN_ARR];
-            Shape tempShape=findShapeByCoordinate(row,col);
-            totalPerimeter += tempShape.calculatePerimeter();
-        }
-        return totalPerimeter;
-    }
 
 
 
