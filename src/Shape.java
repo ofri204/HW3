@@ -24,7 +24,8 @@ public abstract class Shape implements Cloneable{
      * */
     protected final void setShapeDataObject( int width, int height, String shapeStr ){
         if( this.shapeData == null ){
-            this.shapeData = new DisplayedShapeData( width,  height,  shapeStr);
+            this.shapeData = new DisplayedShapeData( this.getClass().getName(),
+                    width,  height,  shapeStr);
         }
     }
 

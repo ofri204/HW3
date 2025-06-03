@@ -2,27 +2,34 @@
 public class DisplayedShapeData {
 
     /**Properties of DisplayedShapeData*/
-    private final int rowAmount;
+    private  int rowAmount;
     private final int columnAmount;
     private final int shapeStrLength;
     private final String shapeStr;
     private final int[] rowsEndsIndexes;
-
+    private final String shapeClassName;
 
     /**DisplayedShapeData Class Properties*/
     private static final int SPACE_BETWEEN_SHAPE_CELLS = 1;
     private static final int SPACE_BETWEEN_ROWS = 2;
 
     /**Basic Constructor of DisplayedShapeData*/
-    public DisplayedShapeData( int width, int height, String shapeStr ){
+    public DisplayedShapeData( String shapeClassName, int width, int height, String shapeStr ){
+        this.shapeClassName = shapeClassName;
         this.rowAmount = height;
         this.columnAmount = width * (DisplayedShapeData.SPACE_BETWEEN_SHAPE_CELLS+1);
         this.shapeStr = shapeStr;
         this.shapeStrLength = this.shapeStr.length();
         this.rowsEndsIndexes = new int[this.rowAmount];
 
+
+        if( this.shapeClassName.equals("Circle") ){
+            this.rowAmount++;
+        }
+
         this.setAllRowsEndings();//find all indexes where row is ending (with '\n')
     }
+
 
     /**<p><u>Finds all indexes where a row ends and store them in {@code rowEndsIndexes}</u></p>*/
     private void setAllRowsEndings(){

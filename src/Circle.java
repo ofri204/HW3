@@ -25,7 +25,7 @@ public class Circle extends Shape {
      */
     @Override
     public int getHeight() {
-        return 2 * this.radius + 1;
+        return 2 * this.radius;
     }
 
     /**
