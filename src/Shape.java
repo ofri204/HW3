@@ -29,6 +29,10 @@ public abstract class Shape implements Cloneable{
         }
     }
 
+    public String getMaxEmptyRow(){
+        return this.shapeData.getMaxEmptyRow();
+    }
+
     /**Get a row of shapes string
      * @param rowNumber
      * @return string of the row */

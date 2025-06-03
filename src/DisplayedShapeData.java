@@ -8,6 +8,8 @@ public class DisplayedShapeData {
     private final String shapeStr;
     private final int[] rowsEndsIndexes;
     private final String shapeClassName;
+    private final String maxEmptyRow;
+
 
     /**DisplayedShapeData Class Properties*/
     private static final int SPACE_BETWEEN_SHAPE_CELLS = 1;
@@ -20,22 +22,28 @@ public class DisplayedShapeData {
         this.columnAmount = width * (DisplayedShapeData.SPACE_BETWEEN_SHAPE_CELLS+1);
         this.shapeStr = shapeStr;
         this.shapeStrLength = this.shapeStr.length();
-        this.rowsEndsIndexes = new int[this.rowAmount];
-
 
         if( this.shapeClassName.equals("Circle") ){
             this.rowAmount++;
         }
 
+        this.rowsEndsIndexes = new int[this.rowAmount];
+        this.maxEmptyRow = " ".repeat( this.columnAmount );
+
         this.setAllRowsEndings();//find all indexes where row is ending (with '\n')
+        this.rowsEndsIndexes[ this.rowAmount - 1] = this.shapeStrLength - 1;
     }
 
+
+    public String getMaxEmptyRow(){
+        return this.maxEmptyRow;
+    }
 
     /**<p><u>Finds all indexes where a row ends and store them in {@code rowEndsIndexes}</u></p>*/
     private void setAllRowsEndings(){
         int rowIndex = 0;
         char rowEnd = Shape.endLine.charAt(0);
-        for( int i = 0; i < this.shapeStrLength && rowIndex < this.rowAmount; i++){
+        for( int i = 0; i < this.shapeStrLength - 1 && rowIndex < this.rowAmount; i++){
             if( this.shapeStr.charAt(i) == rowEnd){
                 this.rowsEndsIndexes[rowIndex] = i;
                 rowIndex++;

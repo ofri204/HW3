@@ -2,14 +2,13 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Canvas canvas = new Canvas(2, 3);
-        canvas.addShape(new Circle(1), 0, 0);
-        canvas.addShape(new Square(1), 1, 0);
+        Canvas canvas = new Canvas(3,4);
+        test9();
         //canvas.addShape(new Rectangle(2, 3), 1, 0);
-        //canvas.addShape(new Circle(2), 0, 1);
+        canvas.addShape(new Circle(2), 0, 1);
         //canvas.addShape(new RightAngleTriangle(4, 3), 0, 2);
 
-        System.out.println(canvas);
+       // System.out.println(canvas);
 
         //test2();
        // test3();
@@ -158,11 +157,12 @@ public class Main {
 
         Canvas canvas = new Canvas(3, 4);
 
-        canvas.addShape( new Circle(1), 1 ,1);
-        canvas.addShape( new Square(1), 1 ,2);
+        canvas.addShape(new Rectangle(5, 4), 0, 0);
+        canvas.addShape(new Circle(3), 0, 2);
+        canvas.addShape(new RightAngleTriangle(5, 5), 1, 1);
+        canvas.addShape(new Square(6), 2, 3);
+        canvas.addShape(new Rectangle(3, 2), 2, 0);
 
-        canvas.addShape( new Circle(1), 2 ,1);
-        canvas.addShape( new Square(1), 2 ,2);
         System.out.println(canvas);
         System.out.println("Canvas Total Area: " + canvas.getTotalArea());
         System.out.println("Canvas Total Perimeter: " + canvas.getTotalPerimeter());
