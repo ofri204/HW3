@@ -9,6 +9,8 @@ public class Canvas {
     private int numShapes;
 
 
+
+
     /**Errors*/
     private static final int INDEX_NOT_EXIST_ERROR = -1;
     private static final int NO_SHAPES_IN_ROW = -2;
