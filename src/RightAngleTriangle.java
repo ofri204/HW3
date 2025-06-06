@@ -6,7 +6,6 @@ public class RightAngleTriangle extends Shape {
     /**Properties of RightAngelTriangle*/
     private final int width;
     private final int height;
-    private final int longestRow;
 
     /**
      * Constructs a right triangle with the width and height.
@@ -18,11 +17,6 @@ public class RightAngleTriangle extends Shape {
         this.width = width;
         this.height = height;
         this.setShapeDataObject( this.getWidth(), this.getHeight(), this.toString());
-        this.longestRow = this.findLongestRowLength();
-    }
-
-    public int getLongestRow(){
-        return this.longestRow;
     }
 
     /**
@@ -111,8 +105,10 @@ public class RightAngleTriangle extends Shape {
      **/
     private String createLine(int starsNum) {
         String blockInLine = Shape.shapeCell + Shape.spaceBetweenCells;
-        return Shape.spaceInBound + blockInLine.repeat(starsNum ) + Shape.spaceBetweenCells +
-                Shape.endLine;
+        String tempStr = Shape.spaceInBound + blockInLine.repeat( starsNum - 1 ) + Shape.shapeCell;
+        int diffrence = (this.width)*3 - tempStr.length();
+        tempStr += Shape.spaceCell.repeat(  diffrence ) +Shape.endLine ;
+        return tempStr;
     }
 
     /**
@@ -135,16 +131,8 @@ public class RightAngleTriangle extends Shape {
         return this.width == otherRightTriangle.width && this.height == otherRightTriangle.height;
     }
 
-    public int findLongestRowLength(){
-        int maxLength = 0;
-        for( int i = 0; i < this.height; i++){
-            int lenRow = this.calculateRowLength(i);
-            if( lenRow > maxLength){
-                maxLength = lenRow;
-            }
-        }
-        return maxLength;
-    }
+
+
 
     /**Clone function*/
     @Override
