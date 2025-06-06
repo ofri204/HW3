@@ -29,15 +29,20 @@ public abstract class Shape implements Cloneable{
         }
     }
 
-    /**Get a row of shapes string
-     * @param rowNumber
-     * @return string of the row */
-    protected final String cutRowFromString( int rowNumber ){
-        return shapeData.cutRowNumber( rowNumber);
+    public String getMaxEmptyRow(){
+        return this.shapeData.getMaxEmptyRow();
     }
 
-    protected final int calculateRowLength( int rowNumber ){
-        return this.shapeData.calculateRowLen( rowNumber );
+    public final String getRow( int numRow){
+        return shapeData.getRow( numRow );
+    }
+
+    public final int getDisplayHeight(){
+        return this.shapeData.getDisplayHeight();
+    }
+
+    public final int getDisplayWidth(){
+        return this.shapeData.getDisplayWidth();
     }
 
     /**

@@ -11,7 +11,7 @@ public class Canvas {
 
     /**Errors*/
     private static final int INDEX_NOT_EXIST_ERROR = -1;
-    private static final int NO_SHAPES_IN_ROW = -2;
+
     /**Coordinates properties*/
     private static final int ROW_POS_IN_COORDS = 0;
     private static final int COLUMN_POS_IN_COORDS = 1;
@@ -97,15 +97,21 @@ public class Canvas {
      * @return canvas board string*/
     private String createCanvasBoard(){
         StringBuilder board = new StringBuilder();
-        for( int row = 0; row < this.rowAmount; row++ ){ // creating each row of the canvas board
-            String boardRow = createCanvasBoardRow( row );
-            board.append( boardRow );
-            board.append( Canvas.EMPTY_ROW );
-            if( this.isEmptyBoardRow( row) ){
-                board.append( Canvas.EMPTY_ROW);
-            }
+        for( int iRow = 0; iRow < this.rowAmount; iRow++ ){ // creating each row of the canvas board
+            board.append( this.createBoardRow( iRow ) );
         }
         return board.toString();
+    }
+
+    private String createBoardRow( int numRow ){
+        StringBuilder row = new StringBuilder();
+        if( this.isEmptyBoardRow( numRow ) ){
+            row.append( Canvas.EMPTY_ROW );
+        } else{
+            row.append( this.createNotEmptyCanvasBoardRow( numRow ) ) ;
+        }
+        row.append( Canvas.EMPTY_ROW );
+        return row.toString();
     }
 
     private boolean isEmptyBoardRow( int rowNum ){
@@ -117,101 +123,56 @@ public class Canvas {
         return true;
     }
 
-    private int findLastShapeInRowIndex(int numRow){
-        int lastShapePos = Canvas.NO_SHAPES_IN_ROW;
-        for( int i = 0; i < this.columnAmount; i++){
-            if( this.shapes[numRow][i] != null){
-                lastShapePos = i;
-            }
-        }
-        return lastShapePos;
-    }
-
-    private String createCanvasBoardRow( int numRow ){
+    private String createNotEmptyCanvasBoardRow( int numRow ){
         StringBuilder canvasBoardRow = new StringBuilder();
-
-        Shape shapeWithMaxWidth = this.findShapeWithMaxRowLen( numRow );
-        int maxRowWidth = this.calculateMaxWidthInRow( shapeWithMaxWidth );
-        String emptyRowLine = Shape.spaceCell.repeat( shapeWithMaxWidth.getWidth()*3 );
-
+        int maxShapeRowWidth = this.findMaxDisplayedShapeWidth( numRow );
+        String emptyRowLine = " ".repeat( maxShapeRowWidth );
         int maxHeight = this.findMaxHeightInRow( numRow );
+
         for( int i = 0; i < maxHeight; i++){
-            String row = this.createDisplayRowOfCanvasRow( i, numRow, emptyRowLine, maxRowWidth );
+            String row = this.createRowOfCanvasRow( i, numRow, emptyRowLine );
             canvasBoardRow.append(row).append(Canvas.EMPTY_ROW);
         }
+
         return canvasBoardRow.toString();
     }
 
-
-    private int calculateMaxWidthInRow( Shape shape ){
-        int numRow = 0;
-        if( shape.getClass() == RightAngleTriangle.class ){
-            numRow = shape.getHeight()-1;
-        } else if( shape.getClass() == Circle.class ){
-            numRow = shape.getHeight()/2 - 1;
-        }
-        return shape.calculateRowLength( numRow );
-    }
-
-    private String createDisplayRowOfCanvasRow( int numRowOfShapeRow, int numOfCanvasRow,
-                                                String emptyRowLine, int maxRowWidth){
+    private String createRowOfCanvasRow( int numRowOfShapeRow, int numOfCanvasRow, String emptyRowLine){
         StringBuilder row = new StringBuilder();
 
         for( int i = 0; i < this.columnAmount; i++){
+            if( i != 0){
+                row.append( Canvas.SPACE_BETWEEN_SHAPES );
+            }
+            Shape tempShape = this.shapes[numOfCanvasRow][i];
 
-            if( this.shapes[numOfCanvasRow][i] == null  ){
+            if( tempShape == null  ){
                     row.append( emptyRowLine );
             } else{
-
-                if( i != 0  && this.shapes[numOfCanvasRow][i-1] != null){
-                    row.append( Canvas.SPACE_BETWEEN_SHAPES );
-                }
-
-                if(  numRowOfShapeRow < this.shapes[numOfCanvasRow][i].getHeight() ){
-                    String fixedShapeRow =
-                            this.fixDisplayedShapeRow(this.shapes[numOfCanvasRow][i],
-                                    maxRowWidth, numRowOfShapeRow );
-                    row.append( fixedShapeRow );
+                if(  numRowOfShapeRow < tempShape.getDisplayHeight() ){
+                    row.append( tempShape.getRow( numRowOfShapeRow) );
                 } else{
-                    row.append( emptyRowLine );
-                }
-
-                if( i != this.columnAmount - 1 && this.shapes[numOfCanvasRow][i+1] != null ){
-                    row.append( Canvas.SPACE_BETWEEN_SHAPES );
+                    row.append(  tempShape.getMaxEmptyRow());
                 }
             }
         }
-
         return row.toString();
     }
 
-    private String fixDisplayedShapeRow( Shape shape, int maxWidth, int rowNumber){
-        StringBuilder shapeRow = new StringBuilder(shape.cutRowFromString(rowNumber));
-        //int difference = maxWidth - shapeRow.toString().length();
-        //shapeRow.append( Shape.spaceCell.repeat( difference  ));
-        return shapeRow.toString();
-    }
-
-    private Shape findShapeWithMaxRowLen( int row ){
-        int maxWidth = 0, shapeIndex = 0;
+    private int findMaxDisplayedShapeWidth( int row ){
+        int maxWidth = 0;
         for( int i = 0; i < this.numShapes; i++){
-            int[] temp = this.shapesCoordinates[i];
-            if( temp[ Canvas.ROW_POS_IN_COORDS] == row) {
-                Shape tempShape = this.shapes[temp[Canvas.ROW_POS_IN_COORDS]][temp[Canvas.COLUMN_POS_IN_COORDS]];
-                int tempShapeWidth =
-                        tempShape.getWidth();
-                if(tempShape.getClass() == Circle.class) { tempShapeWidth++;}
-
+            int[] coordsArr = this.shapesCoordinates[i];
+            if( coordsArr[ Canvas.ROW_POS_IN_COORDS] == row) {
+                Shape tempShape = this.shapes[coordsArr[Canvas.ROW_POS_IN_COORDS]][coordsArr[Canvas.COLUMN_POS_IN_COORDS]];
+                int tempShapeWidth = tempShape.getDisplayWidth();
                 if( tempShapeWidth > maxWidth ) {
                     maxWidth = tempShapeWidth;
-                    shapeIndex = i;
                 }
             }
 
         }
-        int[] maxShapeCoordinate = this.shapesCoordinates[shapeIndex];
-        return  this.shapes[maxShapeCoordinate[Canvas.ROW_POS_IN_COORDS]]
-                [maxShapeCoordinate[Canvas.COLUMN_POS_IN_COORDS]];
+        return maxWidth;
     }
 
     private int findMaxHeightInRow( int row ){
@@ -220,9 +181,7 @@ public class Canvas {
             int[] temp = this.shapesCoordinates[i];
             if (temp[Canvas.ROW_POS_IN_COORDS] == row) {
                 Shape tempShape = this.shapes[temp[Canvas.ROW_POS_IN_COORDS]][temp[Canvas.COLUMN_POS_IN_COORDS]];
-                int tempShapeHeight =
-                        tempShape.getHeight();
-                if( tempShape.getClass() == Circle.class){ tempShapeHeight++;  }
+                int tempShapeHeight = tempShape.getDisplayHeight();
                 if (tempShapeHeight > maxHeight) {
                     maxHeight = tempShapeHeight;
                 }
@@ -320,7 +279,8 @@ public class Canvas {
         return this.shapes[numRow][numColumn] == null;
     }
 
-    /**
+
+    /**Add commentMore actions
      * Helper function for {@link #equals(Object)}.
      * Checks if the given object is not null and if it is of the same class as this object.
      *
@@ -382,9 +342,6 @@ public class Canvas {
     }
 
 }
-
-
-
 
 
 
