@@ -111,6 +111,7 @@ public class Circle extends Shape {
 
     }
 
+    /**Clone function*/
     @Override
     public Circle clone(){
         return new Circle( this.radius );

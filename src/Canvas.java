@@ -8,7 +8,6 @@ public class Canvas {
     private final int[][] shapesCoordinates;
     private int numShapes;
 
-
     /**Errors*/
     private static final int INDEX_NOT_EXIST_ERROR = -1;
 
@@ -17,8 +16,8 @@ public class Canvas {
     private static final int COLUMN_POS_IN_COORDS = 1;
     private static final int NUM_COORDINATE_PARTS = 2;
 
-
-    private static final String SPACE_BETWEEN_SHAPES = "123" ;//"   ";
+    /**General Strings for printing Canvas*/
+    private static final String SPACE_BETWEEN_SHAPES = "   " ;
     private static final String EMPTY_ROW = "\n";
 
     /**Basic Canvas constructor*/
@@ -42,9 +41,7 @@ public class Canvas {
      * @param numRow the row of the shape in canvas
      * @param numColumn the column of the shape in canvas*/
     public void addShape(Shape newShape, int numRow, int numColumn){
-
         if( this.hasOutOfBound(numRow, numColumn) || newShape == null ) { return; }
-
         this.shapes[numRow][numColumn] = newShape.clone();
         this.addCoordinate(numRow, numColumn);
     }
@@ -64,6 +61,8 @@ public class Canvas {
         this.removeCoordinate(numRow, numColumn);
     }
 
+    /**<p><u>Calculate the area of all shapes on the Canvas board</u></p
+     * @return total area of all shapes>*/
     public double getTotalArea() {
         double totalArea= 0;
         for( int i = 0; i < this.numShapes; i++){
@@ -75,6 +74,8 @@ public class Canvas {
         return totalArea;
     }
 
+    /**<p><u>Calculate the total perimeter of all shapes in the Canvas board</u></p>
+     * @return total perimeter of all shapes*/
     public double getTotalPerimeter() {
         double totalPerimeter= 0;
         for( int i = 0; i < this.numShapes; i++){
@@ -87,6 +88,8 @@ public class Canvas {
     }
 
 
+    /**<p><u>Prints the Canvas board</u></p>
+     * @return String of canvas board*/
     @Override
     public String toString(){
         return this.createCanvasBoard();
@@ -94,15 +97,21 @@ public class Canvas {
 
     /**
      * <p><u>Creates canvas board string</u></p>
-     * @return canvas board string*/
+     * <br><b>Sub-function of: {@link #toString()}</b>
+     * @return canvas board string
+     * */
     private String createCanvasBoard(){
         StringBuilder board = new StringBuilder();
-        for( int iRow = 0; iRow < this.rowAmount; iRow++ ){ // creating each row of the canvas board
+        for( int iRow = 0; iRow < this.rowAmount; iRow++ ){ //creating each row of the canvas board
             board.append( this.createBoardRow( iRow ) );
         }
         return board.toString();
     }
 
+    /**<p><u>Creates Row for Canvas Row String</u></p>
+     * <br><b>Sub-function of: {@link #createCanvasBoard()}</b>
+     * @param numRow number of row to create
+     * @return string of the row*/
     private String createBoardRow( int numRow ){
         StringBuilder row = new StringBuilder();
         if( this.isEmptyBoardRow( numRow ) ){
@@ -114,6 +123,10 @@ public class Canvas {
         return row.toString();
     }
 
+    /**<p><u>Checks if a specific Row in canvas board is empty (means there are no shapes)</u></p>
+     *  <br><b>Sub-function of: {@link #createBoardRow(int)}</b>
+     *  @param rowNum number of row to check
+     * @return true if the row is empty, false otherwise*/
     private boolean isEmptyBoardRow( int rowNum ){
         for( int i = 0; i < this.columnAmount; i++){
             if( this.shapes[rowNum][i] != null){
@@ -123,10 +136,15 @@ public class Canvas {
         return true;
     }
 
+    /**<p><u>Creates a canvas board row string if there are shape in it</u></p>
+     * <br><b>Sub-function of: {@link #createBoardRow(int)}</b>
+     * @param numRow number of row to create
+     * @return string of the row
+     * */
     private String createNotEmptyCanvasBoardRow( int numRow ){
         StringBuilder canvasBoardRow = new StringBuilder();
         int maxShapeRowWidth = this.findMaxDisplayedShapeWidth( numRow );
-        String emptyRowLine = " ".repeat( maxShapeRowWidth );
+        String emptyRowLine = " ".repeat( maxShapeRowWidth ); //empty row for empty cells in row
         int maxHeight = this.findMaxHeightInRow( numRow );
 
         for( int i = 0; i < maxHeight; i++){
@@ -137,50 +155,67 @@ public class Canvas {
         return canvasBoardRow.toString();
     }
 
-    private String createRowOfCanvasRow( int numRowOfShapeRow, int numOfCanvasRow, String emptyRowLine){
+    /**<p><u>Creates a row of canvas row</u></p>
+     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int)}</b>
+     * @param numRowOfShapeRow number of row of the row
+     * @param numOfCanvasRow number of canvas row
+     * @param emptyRowLine empty line for empty cells
+     * @return string of the row of the canvas row
+     * */
+    private String createRowOfCanvasRow( int numRowOfShapeRow, int numOfCanvasRow,
+                                         String emptyRowLine){
         StringBuilder row = new StringBuilder();
 
         for( int i = 0; i < this.columnAmount; i++){
-            if( i != 0){
+            if( i != 0 ){
                 row.append( Canvas.SPACE_BETWEEN_SHAPES );
             }
             Shape tempShape = this.shapes[numOfCanvasRow][i];
 
-            if( tempShape == null  ){
+            if( tempShape == null  ){ //the cell is empty
                     row.append( emptyRowLine );
             } else{
-                if(  numRowOfShapeRow < tempShape.getDisplayHeight() ){
+                if(  numRowOfShapeRow < tempShape.getDisplayHeight() ){ // the shape is too short
                     row.append( tempShape.getRow( numRowOfShapeRow) );
                 } else{
-                    row.append(  tempShape.getMaxEmptyRow());
+                    row.append(  tempShape.getMaxEmptyRow() );
                 }
             }
         }
         return row.toString();
     }
 
-    private int findMaxDisplayedShapeWidth( int row ){
+    /**<p><u>Find max width of a shape display in row</u></p>
+     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int)}</b>
+     * @param numRow number of row
+     * @return max width of a shape display in the row*/
+    private int findMaxDisplayedShapeWidth( int numRow ){
         int maxWidth = 0;
-        for( int i = 0; i < this.numShapes; i++){
+        for( int i = 0; i < this.numShapes; i++){ //check all existing shapes
             int[] coordsArr = this.shapesCoordinates[i];
-            if( coordsArr[ Canvas.ROW_POS_IN_COORDS] == row) {
-                Shape tempShape = this.shapes[coordsArr[Canvas.ROW_POS_IN_COORDS]][coordsArr[Canvas.COLUMN_POS_IN_COORDS]];
+            if( coordsArr[ Canvas.ROW_POS_IN_COORDS] == numRow) {//check if the shape is in the row
+                Shape tempShape = this.shapes[coordsArr[Canvas.ROW_POS_IN_COORDS]]
+                                [coordsArr[Canvas.COLUMN_POS_IN_COORDS]];
                 int tempShapeWidth = tempShape.getDisplayWidth();
                 if( tempShapeWidth > maxWidth ) {
                     maxWidth = tempShapeWidth;
                 }
             }
-
         }
         return maxWidth;
     }
 
-    private int findMaxHeightInRow( int row ){
+    /**<p><u>Find max height of a shape display in row</u></p>
+     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int)}</b>
+     * @param numRow number of row
+     * @return max height of a shape display in the row*/
+    private int findMaxHeightInRow( int numRow ){
         int maxHeight = 0;
-        for( int i = 0; i < this.numShapes; i++) {
+        for( int i = 0; i < this.numShapes; i++) { //check all existing shapes
             int[] temp = this.shapesCoordinates[i];
-            if (temp[Canvas.ROW_POS_IN_COORDS] == row) {
-                Shape tempShape = this.shapes[temp[Canvas.ROW_POS_IN_COORDS]][temp[Canvas.COLUMN_POS_IN_COORDS]];
+            if (temp[Canvas.ROW_POS_IN_COORDS] == numRow) { //check if the shape is in the row
+                Shape tempShape = this.shapes[temp[Canvas.ROW_POS_IN_COORDS]]
+                        [temp[Canvas.COLUMN_POS_IN_COORDS]];
                 int tempShapeHeight = tempShape.getDisplayHeight();
                 if (tempShapeHeight > maxHeight) {
                     maxHeight = tempShapeHeight;
@@ -333,7 +368,7 @@ public class Canvas {
     public boolean equals(Object otherObj) {
         if (this == otherObj) return true;
 
-        if (! isOtherNotNullAndSameClass(otherObj)) return false;
+        if (!isOtherNotNullAndSameClass(otherObj) || Canvas.class != otherObj.getClass()) return false;
 
         Canvas other = (Canvas) otherObj;
 

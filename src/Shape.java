@@ -10,8 +10,8 @@ public abstract class Shape implements Cloneable{
     protected static final String endLine = "\n";
     private static final int sizeSpaceBetweenCells = 2;
     private static final int sizeSpaceInBounds = 1;
-    protected static final String spaceBetweenCells ="12";// Shape.spaceCell.repeat( Shape.sizeSpaceBetweenCells);
-    protected static final String spaceInBound = "_";//Shape.spaceCell.repeat( Shape.sizeSpaceInBounds );
+    protected static final String spaceBetweenCells = Shape.spaceCell.repeat( Shape.sizeSpaceBetweenCells);
+    protected static final String spaceInBound = Shape.spaceCell.repeat( Shape.sizeSpaceInBounds );
 
     /**Properties for analyzing shape string*/
     private DisplayedShapeData shapeData;
@@ -29,18 +29,27 @@ public abstract class Shape implements Cloneable{
         }
     }
 
+    /**<p><u>Get empty row in the max row length of the shape</u></p>
+     * @return string of the max empty row*/
     public String getMaxEmptyRow(){
         return this.shapeData.getMaxEmptyRow();
     }
 
+    /**<p><u>Get a string of a specific row</u></p>
+     * @param numRow number row to get
+     * @return string of the row*/
     public final String getRow( int numRow){
         return shapeData.getRow( numRow );
     }
 
+    /**<p><u>Get the display height of the shape</u></p>
+     * @return the display height*/
     public final int getDisplayHeight(){
         return this.shapeData.getDisplayHeight();
     }
 
+    /**<p><u>Get the display width of the shape</u></p>
+     * @return the display width*/
     public final int getDisplayWidth(){
         return this.shapeData.getDisplayWidth();
     }
@@ -90,7 +99,6 @@ public abstract class Shape implements Cloneable{
      * @return true if they are found equal, and returns false otherwise
      **/
     public abstract boolean equals(Object obj);
-
 
     /**Clone function*/
     @Override
