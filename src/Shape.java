@@ -10,8 +10,8 @@ public abstract class Shape implements Cloneable{
     protected static final String endLine = "\n";
     private static final int sizeSpaceBetweenCells = 2;
     private static final int sizeSpaceInBounds = 1;
-    protected static final String spaceBetweenCells = Shape.spaceCell.repeat( Shape.sizeSpaceBetweenCells);
-    protected static final String spaceInBound = Shape.spaceCell.repeat( Shape.sizeSpaceInBounds );
+    protected static final String spaceBetweenCells ="12";// Shape.spaceCell.repeat( Shape.sizeSpaceBetweenCells);
+    protected static final String spaceInBound = "_";//Shape.spaceCell.repeat( Shape.sizeSpaceInBounds );
 
     /**Properties for analyzing shape string*/
     private DisplayedShapeData shapeData;

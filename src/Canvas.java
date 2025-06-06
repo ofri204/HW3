@@ -18,7 +18,7 @@ public class Canvas {
     private static final int NUM_COORDINATE_PARTS = 2;
 
 
-    private static final String SPACE_BETWEEN_SHAPES = "   ";
+    private static final String SPACE_BETWEEN_SHAPES = "123" ;//"   ";
     private static final String EMPTY_ROW = "\n";
 
     /**Basic Canvas constructor*/
