@@ -95,6 +95,24 @@ public class Canvas {
         return this.createCanvasBoard();
     }
 
+    /**<p><u>Finds the shape in the canvas board which has the biggest display width</u></p>
+     * <br><b>Sub-function of: {@link #createCanvasBoard()}</b>
+     * @return the biggest display width
+     * */
+    private int findMaxDisplayWidth(){
+        int maxWidth = 0;
+        for( int i = 0; i < this.numShapes; i++ ) {
+            int[] shapeCoords = this.shapesCoordinates[i];
+            int currentWidth = this.shapes[ shapeCoords[ Canvas.ROW_POS_IN_COORDS] ]
+                    [ shapeCoords[Canvas.COLUMN_POS_IN_COORDS] ].getDisplayWidth();
+            if( currentWidth > maxWidth){
+                maxWidth = currentWidth;
+            }
+        }
+        return  maxWidth;
+    }
+
+
     /**
      * <p><u>Creates canvas board string</u></p>
      * <br><b>Sub-function of: {@link #toString()}</b>
@@ -102,8 +120,9 @@ public class Canvas {
      * */
     private String createCanvasBoard(){
         StringBuilder board = new StringBuilder();
+        String maxEmptyRow = " ".repeat( this.findMaxDisplayWidth() );
         for( int iRow = 0; iRow < this.rowAmount; iRow++ ){ //creating each row of the canvas board
-            board.append( this.createBoardRow( iRow ) );
+            board.append( this.createBoardRow( iRow, maxEmptyRow ) );
         }
         return board.toString();
     }
@@ -111,20 +130,21 @@ public class Canvas {
     /**<p><u>Creates Row for Canvas Row String</u></p>
      * <br><b>Sub-function of: {@link #createCanvasBoard()}</b>
      * @param numRow number of row to create
+     * @param emptyRow a string of empty cell
      * @return string of the row*/
-    private String createBoardRow( int numRow ){
+    private String createBoardRow( int numRow, String emptyRow ){
         StringBuilder row = new StringBuilder();
         if( this.isEmptyBoardRow( numRow ) ){
             row.append( Canvas.EMPTY_ROW );
         } else{
-            row.append( this.createNotEmptyCanvasBoardRow( numRow ) ) ;
+            row.append( this.createNotEmptyCanvasBoardRow( numRow, emptyRow ) ) ;
+            row.append( Canvas.EMPTY_ROW );
         }
-        row.append( Canvas.EMPTY_ROW );
         return row.toString();
     }
 
     /**<p><u>Checks if a specific Row in canvas board is empty (means there are no shapes)</u></p>
-     *  <br><b>Sub-function of: {@link #createBoardRow(int)}</b>
+     *  <br><b>Sub-function of: {@link #createBoardRow(int, String)}</b>
      *  @param rowNum number of row to check
      * @return true if the row is empty, false otherwise*/
     private boolean isEmptyBoardRow( int rowNum ){
@@ -137,26 +157,24 @@ public class Canvas {
     }
 
     /**<p><u>Creates a canvas board row string if there are shape in it</u></p>
-     * <br><b>Sub-function of: {@link #createBoardRow(int)}</b>
+     * <br><b>Sub-function of: {@link #createBoardRow(int, String)}</b>
      * @param numRow number of row to create
+     * @param emptyRow string of empty cell
      * @return string of the row
      * */
-    private String createNotEmptyCanvasBoardRow( int numRow ){
+    private String createNotEmptyCanvasBoardRow( int numRow, String emptyRow ){
         StringBuilder canvasBoardRow = new StringBuilder();
-        int maxShapeRowWidth = this.findMaxDisplayedShapeWidth( numRow );
-        String emptyRowLine = " ".repeat( maxShapeRowWidth ); //empty row for empty cells in row
         int maxHeight = this.findMaxHeightInRow( numRow );
 
         for( int i = 0; i < maxHeight; i++){
-            String row = this.createRowOfCanvasRow( i, numRow, emptyRowLine );
+            String row = this.createRowOfCanvasRow( i, numRow, emptyRow );
             canvasBoardRow.append(row).append(Canvas.EMPTY_ROW);
         }
-
         return canvasBoardRow.toString();
     }
 
     /**<p><u>Creates a row of canvas row</u></p>
-     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int)}</b>
+     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int, String)}</b>
      * @param numRowOfShapeRow number of row of the row
      * @param numOfCanvasRow number of canvas row
      * @param emptyRowLine empty line for empty cells
@@ -185,28 +203,8 @@ public class Canvas {
         return row.toString();
     }
 
-    /**<p><u>Find max width of a shape display in row</u></p>
-     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int)}</b>
-     * @param numRow number of row
-     * @return max width of a shape display in the row*/
-    private int findMaxDisplayedShapeWidth( int numRow ){
-        int maxWidth = 0;
-        for( int i = 0; i < this.numShapes; i++){ //check all existing shapes
-            int[] coordsArr = this.shapesCoordinates[i];
-            if( coordsArr[ Canvas.ROW_POS_IN_COORDS] == numRow) {//check if the shape is in the row
-                Shape tempShape = this.shapes[coordsArr[Canvas.ROW_POS_IN_COORDS]]
-                                [coordsArr[Canvas.COLUMN_POS_IN_COORDS]];
-                int tempShapeWidth = tempShape.getDisplayWidth();
-                if( tempShapeWidth > maxWidth ) {
-                    maxWidth = tempShapeWidth;
-                }
-            }
-        }
-        return maxWidth;
-    }
-
     /**<p><u>Find max height of a shape display in row</u></p>
-     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int)}</b>
+     * <br><b>Sub-function of: {@link #createNotEmptyCanvasBoardRow(int, String)}</b>
      * @param numRow number of row
      * @return max height of a shape display in the row*/
     private int findMaxHeightInRow( int numRow ){

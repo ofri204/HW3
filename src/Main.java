@@ -1,14 +1,14 @@
 public class Main {
 
     public static void main(String[] args) {
-        //test1();
-        //test2();
-       // test3();
-        //test4();
-        // test5();
-        //test6();
-        //test7();
-        //test8();
+        test1();
+        test2();
+        test3();
+        test4();
+        test5();
+        test6();
+        test7();
+        test8();
         test9();
     }
 
@@ -63,8 +63,6 @@ public class Main {
         canvas.addShape(new Rectangle(2, 3), 0, 0);
         canvas.addShape(new Circle(2), 1, 1);
         canvas.addShape(new RightAngleTriangle(4, 3), 2, 2);
-
-
 
         System.out.println(canvas);
         System.out.println("Total Area: " + canvas.getTotalArea());
