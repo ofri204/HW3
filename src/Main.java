@@ -1,17 +1,18 @@
 public class Main {
 
     public static void main(String[] args) {
-        //test1();
+        test1();
         test2();
-        /*test3();
+        test3();
         test4();
         test5();
         test6();
         test7();
         test8();
-        test9();*/
+        test9();
     }
 
+    /// //////
     public static void test1() {
         System.out.println("--- Test 1 - Rectangle and Square ---");
 

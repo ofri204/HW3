@@ -165,7 +165,6 @@ public class Canvas {
     private String createNotEmptyCanvasBoardRow( int numRow, String emptyRow ){
         StringBuilder canvasBoardRow = new StringBuilder();
         int maxHeight = this.findMaxHeightInRow( numRow );
-
         for( int i = 0; i < maxHeight; i++){
             String row = this.createRowOfCanvasRow( i, numRow, emptyRow );
             canvasBoardRow.append(row).append(Canvas.EMPTY_ROW);
@@ -188,6 +187,7 @@ public class Canvas {
             if( i != 0 ){
                 row.append( Canvas.SPACE_BETWEEN_SHAPES );
             }
+
             Shape tempShape = this.shapes[numOfCanvasRow][i];
 
             if( tempShape == null  ){ //the cell is empty
