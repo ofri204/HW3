@@ -3,6 +3,9 @@ public class Main {
     public static void main(String[] args) {
 
 
+        Canvas canv1  = new  Canvas( 5, 5 );
+
+
         //test1();
         //test2();
         //test3();
@@ -11,7 +14,7 @@ public class Main {
         //test6();
         //test7();
         //test8();
-       // test9();
+        //test9();
     }
 
 
