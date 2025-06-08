@@ -7,6 +7,7 @@ public class Canvas {
     private final Shape[][] shapes;
     private final int[][] shapesCoordinates;
     private int numShapes;
+    private boolean isUndefinedCanvas = false;
 
     /**Errors*/
     private static final int INDEX_NOT_EXIST_ERROR = -1;
@@ -16,12 +17,18 @@ public class Canvas {
     private static final int COLUMN_POS_IN_COORDS = 1;
     private static final int NUM_COORDINATE_PARTS = 2;
 
+
+
     /**General Strings for printing Canvas*/
     private static final String SPACE_BETWEEN_SHAPES = "   " ;
     private static final String EMPTY_ROW = "\n";
 
     /**Basic Canvas constructor*/
     public Canvas(int rowAmount, int columnAmount) {
+
+        if( rowAmount <= 0 || columnAmount <= 0){
+            this.isUndefinedCanvas = true;
+        }
 
         this.rowAmount = rowAmount;
         this.columnAmount = columnAmount;
@@ -33,6 +40,7 @@ public class Canvas {
     }
 
 
+
     /**
      * <p><u>Adds shape to array</u></p>
      * <br><b>Note1: if the {@code newShape} is null, it won't be added.</b>
@@ -41,7 +49,7 @@ public class Canvas {
      * @param numRow the row of the shape in canvas
      * @param numColumn the column of the shape in canvas*/
     public void addShape(Shape newShape, int numRow, int numColumn){
-        if( this.hasOutOfBound(numRow, numColumn) || newShape == null ) { return; }
+        if( this.isUndefinedCanvas || this.hasOutOfBound(numRow, numColumn) || newShape == null ) { return; }
         this.shapes[numRow][numColumn] = newShape.clone();
         this.addCoordinate(numRow, numColumn);
     }
@@ -54,7 +62,7 @@ public class Canvas {
      * @param numColumn column of a shape to remove
      * */
     public void removeShape( int numRow, int numColumn ){
-        if( this.hasOutOfBound(numRow, numColumn) || this.isCoordinateEmpty(numRow, numColumn) ) {
+        if( this.isUndefinedCanvas || this.hasOutOfBound(numRow, numColumn) || this.isCoordinateEmpty(numRow, numColumn) ) {
             return;
         }
         this.shapes[numRow][numColumn] = null;
@@ -109,7 +117,7 @@ public class Canvas {
                 maxWidth = currentWidth;
             }
         }
-        return  maxWidth;
+        return maxWidth;
     }
 
 
