@@ -18,7 +18,6 @@ public class Canvas {
     private static final int NUM_COORDINATE_PARTS = 2;
 
 
-
     /**General Strings for printing Canvas*/
     private static final String SPACE_BETWEEN_SHAPES = "   " ;
     private static final String EMPTY_ROW = "\n";
@@ -318,18 +317,6 @@ public class Canvas {
         return this.shapes[numRow][numColumn] == null;
     }
 
-
-    /**Add commentMore actions
-     * Helper function for {@link #equals(Object)}.
-     * Checks if the given object is not null and if it is of the same class as this object.
-     *
-     * @param otherObj the object to compare with.
-     * @return true if the object is not null and belongs to the same class, false otherwise.
-     **/
-    private boolean isOtherNotNullAndSameClass(Object otherObj) {
-        return otherObj != null && this.getClass() == otherObj.getClass();
-    }
-
     /**
      * Helper function for {@link #equals(Object)}.
      * Checks if this canvas has the same dimensions as the another canvas.
@@ -372,11 +359,11 @@ public class Canvas {
     public boolean equals(Object otherObj) {
         if (this == otherObj) return true;
 
-        if (!isOtherNotNullAndSameClass(otherObj) || Canvas.class != otherObj.getClass()) return false;
+        if ( otherObj != null && this.getClass() == otherObj.getClass() ) { return false; }
 
         Canvas other = (Canvas) otherObj;
 
-        return isTheSameDimensions(other) && areAllShapesTheSame(other);
+        return this.isTheSameDimensions(other) && this.areAllShapesTheSame(other);
 
     }
 

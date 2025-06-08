@@ -13,8 +13,10 @@ public abstract class Shape implements Cloneable{
     protected static final String spaceBetweenCells = Shape.spaceCell.repeat( Shape.sizeSpaceBetweenCells);
     protected static final String spaceInBound = Shape.spaceCell.repeat( Shape.sizeSpaceInBounds );
 
+
     /**Properties for analyzing shape string*/
     private DisplayedShapeData shapeData;
+
 
     /**Create {@code shapeData}
      * <br> Note: this function can set data shape once (since shape is immutable object)
