@@ -12,7 +12,7 @@ public class Main {
         test9();
     }
 
-    /// //////
+
     public static void test1() {
         System.out.println("--- Test 1 - Rectangle and Square ---");
 

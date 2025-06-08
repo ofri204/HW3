@@ -134,12 +134,10 @@ public class Canvas {
      * @return string of the row*/
     private String createBoardRow( int numRow, String emptyRow ){
         StringBuilder row = new StringBuilder();
-        if( this.isEmptyBoardRow( numRow ) ){
-            row.append( Canvas.EMPTY_ROW );
-        } else{
+        if( !this.isEmptyBoardRow( numRow ) ){
             row.append( this.createNotEmptyCanvasBoardRow( numRow, emptyRow ) ) ;
-            row.append( Canvas.EMPTY_ROW );
         }
+        row.append( Canvas.EMPTY_ROW );
         return row.toString();
     }
 
