@@ -131,9 +131,6 @@ public class RightAngleTriangle extends Shape {
         return this.width == otherRightTriangle.width && this.height == otherRightTriangle.height;
     }
 
-
-
-
     /**Clone function*/
     @Override
     public RightAngleTriangle clone(){
