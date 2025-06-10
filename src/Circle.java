@@ -117,4 +117,9 @@ public class Circle extends Shape {
         return new Circle( this.radius );
     }
 
+    @Override
+    public int hashCode(){
+        return 1;
+    }
+
 }

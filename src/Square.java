@@ -43,4 +43,5 @@ public class Square extends Rectangle {
     public Square clone(){
         return new Square( this.side );
     }
+
 }

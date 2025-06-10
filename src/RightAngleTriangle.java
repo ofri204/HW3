@@ -137,5 +137,9 @@ public class RightAngleTriangle extends Shape {
         return new RightAngleTriangle(this.width, this.height);
     }
 
+    @Override
+    public int hashCode(){
+        return 1;
+    }
 
 }

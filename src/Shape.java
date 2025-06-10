@@ -92,16 +92,6 @@ public abstract class Shape implements Cloneable{
      **/
     public abstract String toString();
 
-    /**
-     * Checks whether this shape is equal to another object.
-     * Two shapes are considered equal if they are of the same type
-     * and have the same attributes.
-     *
-     * @param obj the object to compare with this shape
-     * @return true if they are found equal, and returns false otherwise
-     **/
-    public abstract boolean equals(Object obj);
-
     /**Clone function*/
     @Override
     public abstract Shape clone();

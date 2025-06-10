@@ -6,15 +6,15 @@ public class Main {
         Canvas canv1  = new  Canvas( 5, 5 );
 
 
-        //test1();
-        //test2();
-        //test3();
-        //test4();
-        //test5();
-        //test6();
-        //test7();
-        //test8();
-        //test9();
+        test1();
+        test2();
+        test3();
+        test4();
+        test5();
+        test6();
+        test7();
+        test8();
+        test9();
     }
 
 

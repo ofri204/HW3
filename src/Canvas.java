@@ -367,7 +367,12 @@ public class Canvas {
 
     }
 
+    @Override
+    public int hashCode(){
+        return 1;
+    }
 }
+
 
 
 

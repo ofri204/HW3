@@ -100,4 +100,9 @@ public class Rectangle extends Shape {
         return new Rectangle(this.width, this.height);
     }
 
+    @Override
+    public int hashCode(){
+        return 1;
+    }
+
 }
